@@ -1,6 +1,6 @@
 {
   "name": "gd-product-kit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "搞定产品设计包 · VibeCoding 项目工作台（DSH 插件）",

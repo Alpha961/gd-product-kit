@@ -201,17 +201,17 @@ svg{display:block;flex:none}
 .tstep{flex:1;position:relative;text-align:center;font-size:10.5px;color:var(--text3);min-width:0}
 .tstep::before{content:"";position:absolute;top:5px;left:-50%;width:100%;height:2px;background:var(--line);z-index:0}
 .tstep:first-child::before{display:none}
-.tstep.done::before{background:var(--brand-line)}
-.tstep.active::before{background:var(--brand-line)}
+.tstep.st-done::before{background:var(--brand-line)}
+.tstep.st-active::before{background:var(--brand-line)}
 .tstep .tdot{
   width:10px;height:10px;border-radius:50%;display:block;margin:0 auto 6px;position:relative;z-index:1;
   background:var(--line2);border:2px solid var(--panel);box-sizing:content-box;
 }
-.tstep.done .tdot{background:var(--brand)}
-.tstep.active .tdot{background:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.tstep.st-done .tdot{background:var(--brand)}
+.tstep.st-active .tdot{background:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
 .tstep b{display:block;font-size:10.5px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tstep.done b{color:var(--text2)}
-.tstep.active b{color:var(--brand)}
+.tstep.st-done b{color:var(--text2)}
+.tstep.st-active b{color:var(--brand)}
 .tstep span{display:block;font-size:9.5px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vline{display:flex;align-items:center;gap:9px;margin:2px 0 4px}
 .vline .ver{font-size:13px;padding:3px 8px}
