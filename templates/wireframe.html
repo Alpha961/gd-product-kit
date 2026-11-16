@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[项目名] · 线框图 [版本号]</title>
+<style>
+  :root{
+    --bg:#f4f4f2; --surface:#ffffff; --ink:#1f2225; --ink-2:#6b7076;
+    --line:#d8d9d6; --gray:#e8e8e5; --gray-2:#c9cac6; --primary:#2c6bed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:28px 24px 60px;background:var(--bg);color:var(--ink);
+       font:15px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;}
+  h1{font-size:22px;margin:0 0 6px;}
+  h2{font-size:16px;margin:36px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+  .meta{color:var(--ink-2);font-size:13px;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;font-size:13px;color:var(--ink-2);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{display:inline-block;width:22px;height:14px;border:1px solid var(--gray-2);border-radius:3px;background:var(--gray);}
+  .swatch.solid{border-color:var(--ink-2);background:var(--surface);}
+
+  .phones{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
+  .phone{width:250px;background:var(--surface);border:2px solid var(--gray-2);border-radius:18px;padding:12px;}
+  .phone .bar{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2);padding:0 4px 8px;}
+  .phone .title{font-size:14px;font-weight:600;padding:4px 2px 10px;border-bottom:1px dashed var(--line);}
+  .phone .enter{font-size:11px;color:var(--ink-2);padding:6px 2px 4px;}
+  .block{background:var(--gray);border:1px solid var(--gray-2);border-radius:6px;
+         height:44px;margin:8px 0;display:flex;align-items:center;justify-content:center;
+         font-size:12px;color:var(--ink-2);text-align:center;padding:0 8px;}
+  .block.tall{height:96px;}
+  .block.short{height:32px;}
+  .btn{margin:10px 0 4px;height:38px;border:1px solid var(--ink-2);border-radius:6px;
+       display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
+  .back{font-size:11px;color:var(--ink-2);text-align:center;padding-top:6px;}
+
+  .flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;}
+  .node{border:1px solid var(--gray-2);background:var(--surface);border-radius:8px;padding:8px 12px;}
+  .arrow{color:var(--ink-2);}
+  .rule{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;}
+  .rule table{border-collapse:collapse;width:100%;font-size:13px;margin-top:6px;}
+  .rule th,.rule td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;}
+  .rule th{background:var(--gray);font-weight:600;}
+  .note{color:var(--ink-2);font-size:12px;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<h1>[项目名] · 线框图</h1>
+<p class="meta">版本：[版本号] ｜ 更新：[YYYY-MM-DD] ｜ 对应 PRD：[docs/PRD.md]</p>
+
+<div class="legend">
+  <span><i class="swatch"></i>灰框 = 未确认</span>
+  <span><i class="swatch solid"></i>实线 = 已确认</span>
+  <span>文字写清「进入条件 / 内容 / 主按钮 / 返回」</span>
+</div>
+
+<h2>1 页面灰框</h2>
+<div class="phones">
+
+  <!-- 首页 -->
+  <div class="phone">
+    <div class="bar"><span>[状态栏]</span><span>[手势区]</span></div>
+    <div class="title">[首页]</div>
+    <div class="enter">进入条件：[从哪进来]</div>
+    <div class="block short">[顶部标题 / 品牌]</div>
+    <div class="block">[主信息块：今天要看的那个数 / 那条记录]</div>
+    <div class="block short">[快捷入口] [快捷入口]</div>
+    <div class="btn">[主按钮：开始记录]</div>
+    <div class="back">返回：[无 / 退出]</div>
+  </div>
+
+  <!-- 列表 -->
+  <div class="phone">
+    <div class="bar"><span>[状态栏]</span><span>[手势区]</span></div>
+    <div class="title">[列表页]</div>
+    <div class="enter">进入条件：[从首页哪个入口点进来]</div>
+    <div class="block short">[筛选 / 搜索]</div>
+    <div class="block">[列表行 1]</div>
+    <div class="block">[列表行 2]</div>
+    <div class="block">[列表行 3]</div>
+    <div class="btn">[主按钮：新增一条]</div>
+    <div class="back">返回：[首页]</div>
+  </div>
+
+  <!-- 详情 -->
+  <div class="phone">
+    <div class="bar"><span>[状态栏]</span><span>[手势区]</span></div>
+    <div class="title">[详情页]</div>
+    <div class="enter">进入条件：[点列表某一行]</div>
+    <div class="block">[标题 + 主要字段]</div>
+    <div class="block tall">[明细内容 / 历史记录]</div>
+    <div class="block short">[次要操作：编辑 / 删除]</div>
+    <div class="btn">[主按钮：完成 / 下一步]</div>
+    <div class="back">返回：[列表页]</div>
+  </div>
+
+  <!-- 表单 -->
+  <div class="phone">
+    <div class="bar"><span>[状态栏]</span><span>[手势区]</span></div>
+    <div class="title">[表单页]</div>
+    <div class="enter">进入条件：[点新增 / 点编辑]</div>
+    <div class="block short">[字段 1：必填]</div>
+    <div class="block short">[字段 2：可选]</div>
+    <div class="block short">[字段 3：选择]</div>
+    <div class="block short">[错误提示位置]</div>
+    <div class="btn">[主按钮：保存]</div>
+    <div class="back">返回：[上一步 / 列表页]</div>
+  </div>
+
+</div>
+
+<h2>2 主流程</h2>
+<div class="flow">
+  <div class="node">[首页]</div><span class="arrow">→</span>
+  <div class="node">[列表页]</div><span class="arrow">→</span>
+  <div class="node">[表单页 · 新建]</div><span class="arrow">→</span>
+  <div class="node">[详情页 · 确认]</div><span class="arrow">→</span>
+  <div class="node">[完成，回列表]</div><span class="arrow">→</span>
+  <div class="node">[下次再来，数据还在]</div>
+</div>
+<p class="note">写清每一步的触发点；如果中途可以退出，标出退出后回到哪一页。</p>
+
+<h2>3 跨页面规则</h2>
+<div class="rule">
+  <table>
+    <tr><th>状态</th><th>出现在哪</th><th>显示什么</th><th>用户能做什么</th></tr>
+    <tr>
+      <td>空</td>
+      <td>[列表页 / 首页]</td>
+      <td>[一句说明 + 一个入口]</td>
+      <td>[点主按钮去新建]</td>
+    </tr>
+    <tr>
+      <td>加载</td>
+      <td>[列表页 / 详情页]</td>
+      <td>[骨架 / 转圈，不闪白]</td>
+      <td>[等待，按钮禁用]</td>
+    </tr>
+    <tr>
+      <td>错误</td>
+      <td>[所有读数据的地方]</td>
+      <td>[说清发生了什么 + 重试]</td>
+      <td>[点重试，数据不丢]</td>
+    </tr>
+    <tr>
+      <td>未保存</td>
+      <td>[表单页]</td>
+      <td>[离开前提示「还没保存」]</td>
+      <td>[留下继续 / 放弃离开]</td>
+    </tr>
+  </table>
+  <p class="note">这四种状态每一页都要过一遍；页面里没画到的，写在这张表里。</p>
+</div>
+
+<h2>4 待确认</h2>
+<div class="rule">
+  <table>
+    <tr><th>#</th><th>问题</th><th>影响哪一页</th><th>状态</th></tr>
+    <tr><td>1</td><td>[页面是否合并 / 拆分]</td><td>[列表页]</td><td>待确认</td></tr>
+    <tr><td>2</td><td>[主按钮放哪]</td><td>[详情页]</td><td>待确认</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

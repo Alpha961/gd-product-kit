@@ -1,0 +1,5 @@
+# gd-product-kit bundle patch：把宿主半与浏览器半一起挂进 web profile。
+# 激活：dsh plugin --profile web add link:E:/WORK/gd-product-kit
+- insert:
+    - id: gd-product-kit
+      name: 'gd-product-kit'

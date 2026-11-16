@@ -1,0 +1,47 @@
+{
+  "name": "gd-product-kit",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "搞定产品设计包 · VibeCoding 项目工作台（DSH 插件）",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alpha961/gd-product-kit.git"
+  },
+  "homepage": "https://github.com/Alpha961/gd-product-kit#readme",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "product-design",
+    "vibe-coding"
+  ],
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "dsh": "0.2.2-rc.1",
+    "node": ">=20"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-api-session-controller",
+        "@deepseek-ai/dsh-api-workspace-controller"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  }
+}

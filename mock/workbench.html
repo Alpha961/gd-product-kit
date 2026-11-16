@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gd-product-kit · 工作台样板</title>
+<style>
+:root{
+  --bg:#f2f4f7; --panel:#ffffff; --panel2:#f8f9fb; --panel3:#eef1f5;
+  --line:#e4e7ec; --line2:#d0d5dd;
+  --text:#101828; --text2:#475467; --text3:#98a2b3;
+  --brand:#4d6bfe; --brand-soft:#eef2ff; --brand-line:#c7d2fe;
+  --green:#067647; --green-soft:#ecfdf3; --green-line:#abefc6;
+  --amber:#b54708; --amber-soft:#fffaeb; --amber-line:#fedf89;
+  --red:#b42318; --red-soft:#fef3f2; --red-line:#fecdca;
+  --blue:#175cd3; --blue-soft:#eff8ff; --blue-line:#b2ddff;
+  --purple:#6941c6; --purple-soft:#f4f3ff; --purple-line:#d9d6fe;
+  --shadow:0 1px 2px rgba(16,24,40,.05);
+  --shadow-lg:0 12px 32px rgba(16,24,40,.14);
+  --mono:ui-monospace,"Cascadia Code","SFMono-Regular",Consolas,monospace;
+  --mock-h:56px;
+}
+[data-theme="dark"]{
+  --bg:#0f1115; --panel:#171a1f; --panel2:#1b1f26; --panel3:#222831;
+  --line:#2a2f38; --line2:#3a404c;
+  --text:#e6e8eb; --text2:#a8b0bd; --text3:#6f7885;
+  --brand:#7c93ff; --brand-soft:#1d2440; --brand-line:#31408a;
+  --green:#4ade80; --green-soft:#12261a; --green-line:#1f5133;
+  --amber:#fbbf24; --amber-soft:#2a2312; --amber-line:#5c4a16;
+  --red:#f87171; --red-soft:#2a1616; --red-line:#5c2626;
+  --blue:#7dd3fc; --blue-soft:#0f2230; --blue-line:#1d4a63;
+  --purple:#b69cff; --purple-soft:#211b38; --purple-line:#42366e;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:13px;-webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input{font:inherit;color:inherit}
+a{color:inherit}
+code{font-family:var(--mono);font-size:.92em;background:var(--panel3);padding:1px 4px;border-radius:4px}
+::selection{background:color-mix(in srgb,var(--brand) 22%,transparent)}
+*{scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:3px solid transparent;background-clip:padding-box}
+svg{display:block;flex:none}
+
+/* ---------- 样板控制条 ---------- */
+.mockbar{
+  height:var(--mock-h);flex:none;display:flex;align-items:center;gap:14px;
+  padding:0 16px;background:#10141c;color:#e6e8eb;border-bottom:1px solid #1f2633;
+  overflow-x:auto;white-space:nowrap;
+}
+.mb-left{display:flex;align-items:center;gap:10px;min-width:0}
+.mb-badge{font-size:9px;font-weight:700;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:#2a3346;color:#9fb0ff}
+.mb-left b{font-size:12.5px;font-weight:600}
+.mb-note{font-size:11px;color:#7d8797}
+.mb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.mb-label{font-size:11px;color:#7d8797}
+.seg{display:flex;gap:2px;padding:2px;border-radius:8px;background:#1a2130;border:1px solid #2a3346}
+.seg button{padding:4px 9px;border-radius:6px;font-size:11.5px;color:#9aa4b2;white-space:nowrap}
+.seg button:hover{color:#fff}
+.seg button.on{background:#2f3a52;color:#fff}
+.mb-theme{height:28px;padding:0 10px;border-radius:7px;border:1px solid #2a3346;background:#1a2130;color:#c4cbd6;font-size:11.5px}
+.mb-theme:hover{border-color:#3a4766;color:#fff}
+
+/* ---------- 应用外壳 ---------- */
+.app{flex:1;min-height:0;display:flex;background:var(--bg)}
+.rail{
+  width:60px;flex:none;background:var(--panel);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px;
+}
+.logo{
+  width:30px;height:30px;border-radius:9px;margin-bottom:10px;
+  background:linear-gradient(135deg,#5b7cfa,#3f5be0);color:#fff;
+  display:grid;place-items:center;font-size:10px;font-weight:800;letter-spacing:.02em;
+}
+.rail button{width:38px;height:38px;border-radius:10px;color:var(--text3);display:grid;place-items:center;position:relative}
+.rail button:hover{background:var(--panel2);color:var(--text2)}
+.rail button.on{background:var(--brand-soft);color:var(--brand)}
+.rail button.on::before{content:"";position:absolute;left:-11px;top:9px;bottom:9px;width:2px;border-radius:2px;background:var(--brand)}
+.rail-spacer{flex:1}
+
+/* ---------- 工作台头部 ---------- */
+.wb{flex:1;min-width:0;display:flex;flex-direction:column}
+.wb-head{
+  height:62px;flex:none;display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--panel);border-bottom:1px solid var(--line);
+}
+.wb-title{display:flex;align-items:center;gap:10px;min-width:0}
+.wb-ico{width:30px;height:30px;border-radius:8px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center}
+.wb-t{font-size:13.5px;font-weight:650;line-height:1.2}
+.wb-s{font-size:10.5px;color:var(--text3);margin-top:2px}
+.search{
+  margin-left:auto;display:flex;align-items:center;gap:7px;height:32px;width:280px;
+  padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text3);
+}
+.search:focus-within{border-color:var(--brand-line);background:var(--panel);box-shadow:0 0 0 3px var(--brand-soft)}
+.search input{border:0;outline:0;background:none;width:100%;font-size:12px;color:var(--text)}
+.search input::placeholder{color:var(--text3)}
+.wb-actions{display:flex;align-items:center;gap:8px}
+
+/* ---------- 通用控件 ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;
+  border-radius:8px;border:1px solid var(--line2);background:var(--panel);color:var(--text2);
+  font-size:12px;font-weight:500;white-space:nowrap;transition:background .12s,border-color .12s,color .12s;
+}
+.btn:hover{background:var(--panel2);color:var(--text)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(1.06);color:#fff}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--panel2)}
+.btn.sm{height:26px;padding:0 8px;font-size:11px;border-radius:6px}
+.btn.icon{width:32px;padding:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip{
+  display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:999px;
+  font-size:11px;line-height:1;font-weight:500;border:1px solid transparent;white-space:nowrap;
+}
+.chip.green{color:var(--green);background:var(--green-soft);border-color:var(--green-line)}
+.chip.amber{color:var(--amber);background:var(--amber-soft);border-color:var(--amber-line)}
+.chip.red{color:var(--red);background:var(--red-soft);border-color:var(--red-line)}
+.chip.blue{color:var(--blue);background:var(--blue-soft);border-color:var(--blue-line)}
+.chip.purple{color:var(--purple);background:var(--purple-soft);border-color:var(--purple-line)}
+.chip.gray{color:var(--text2);background:var(--panel3);border-color:var(--line)}
+.dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--text3)}
+.dot.green{background:var(--green)}
+.dot.amber{background:var(--amber)}
+.dot.blue{background:var(--blue)}
+.dot.gray{background:var(--text3)}
+
+/* ---------- 左侧项目列表 ---------- */
+.wb-body{flex:1;min-height:0;display:flex}
+.plist{width:300px;flex:none;display:flex;flex-direction:column;background:var(--panel2);border-right:1px solid var(--line)}
+.plist-head{padding:14px 12px 10px;display:flex;flex-direction:column;gap:10px}
+.plist-title{font-size:12px;font-weight:650;color:var(--text2);display:flex;align-items:center;gap:6px}
+.plist-title span{font-weight:500;color:var(--text3);font-size:11px}
+.filters{display:flex;gap:4px;flex-wrap:wrap}
+.filters button{
+  height:24px;padding:0 8px;border-radius:6px;border:1px solid transparent;
+  font-size:11px;color:var(--text3);display:inline-flex;align-items:center;gap:4px;
+}
+.filters button:hover{color:var(--text2);background:var(--panel3)}
+.filters button.on{color:var(--brand);background:var(--brand-soft);border-color:var(--brand-line)}
+.filters em{font-style:normal;font-size:10px;opacity:.75}
+.plist-scroll{flex:1;overflow:auto;padding:2px 8px 14px}
+.prow{
+  width:100%;text-align:left;display:flex;flex-direction:column;gap:7px;
+  padding:10px 11px;border-radius:10px;border:1px solid transparent;margin-bottom:4px;
+  transition:background .12s,border-color .12s;
+}
+.prow:hover{background:color-mix(in srgb,var(--panel) 72%,transparent)}
+.prow.on{background:var(--panel);border-color:var(--line2);box-shadow:var(--shadow)}
+.prow.paused{opacity:.66}
+.prow-top{display:flex;align-items:center;gap:7px;min-width:0}
+.prow-name{flex:1;min-width:0;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow-ver{font-family:var(--mono);font-size:10px;color:var(--text3);border:1px solid var(--line);border-radius:5px;padding:1px 4px;background:var(--panel)}
+.prow-sub{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--text3);min-width:0}
+.prow-sub .chip{height:19px;font-size:10px;padding:0 6px}
+.prow-time{margin-left:auto;white-space:nowrap}
+.pbar{height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--brand);border-radius:2px}
+.pbar.paused i{background:var(--text3)}
+.plist-empty{padding:32px 12px;text-align:center;font-size:11.5px;color:var(--text3)}
+.plist-foot{
+  flex:none;padding:9px 12px;border-top:1px solid var(--line);font-size:10px;color:var(--text3);
+  display:flex;align-items:center;gap:6px;font-family:var(--mono);
+}
+.plist-foot button{margin-left:auto;font-size:10.5px;color:var(--brand);font-family:inherit}
+
+/* ---------- 详情 ---------- */
+.detail{flex:1;min-width:0;overflow:auto}
+.detail-inner{max-width:1200px;margin:0 auto;padding:22px 26px 64px}
+.dhead{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.dhead h1{font-size:20px;font-weight:700;margin:0;letter-spacing:-.01em;line-height:1.25}
+.dhead .kind{margin-left:8px;vertical-align:2px}
+.path{font-family:var(--mono);font-size:10.5px;color:var(--text3);margin-top:4px}
+.dhead-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ver{font-family:var(--mono);font-size:11.5px;padding:3px 7px;border:1px solid var(--line2);border-radius:6px;color:var(--text2);background:var(--panel)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:1180px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.main>.card,.side>.card{margin-bottom:14px}
+.card-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;min-height:24px}
+.card-head h2{font-size:12.5px;font-weight:650;margin:0}
+.card-head .hint{font-size:10.5px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-head .act{margin-left:auto;display:flex;gap:6px;flex:none}
+
+/* 版本卡 */
+.vgoal{font-size:15px;font-weight:600;line-height:1.5;margin:0 0 12px}
+.vmeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--text3)}
+.release{
+  display:flex;align-items:center;gap:8px;margin-top:12px;padding:9px 11px;
+  border:1px dashed var(--line2);border-radius:9px;font-size:11.5px;color:var(--text3);
+}
+.release a{color:var(--brand);text-decoration:none;font-family:var(--mono);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.release a:hover{text-decoration:underline}
+.release .grow{flex:1;min-width:0}
+.track{display:flex;margin:18px 0 4px}
+.tstep{flex:1;position:relative;text-align:center;font-size:10.5px;color:var(--text3);min-width:0}
+.tstep::before{content:"";position:absolute;top:5px;left:-50%;width:100%;height:2px;background:var(--line);z-index:0}
+.tstep:first-child::before{display:none}
+.tstep.done::before{background:var(--brand-line)}
+.tstep.active::before{background:var(--brand-line)}
+.tstep .tdot{
+  width:10px;height:10px;border-radius:50%;display:block;margin:0 auto 6px;position:relative;z-index:1;
+  background:var(--line2);border:2px solid var(--panel);box-sizing:content-box;
+}
+.tstep.done .tdot{background:var(--brand)}
+.tstep.active .tdot{background:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.tstep b{display:block;font-size:10.5px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tstep.done b{color:var(--text2)}
+.tstep.active b{color:var(--brand)}
+.tstep span{display:block;font-size:9.5px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vline{display:flex;align-items:center;gap:9px;margin:2px 0 4px}
+.vline .ver{font-size:13px;padding:3px 8px}
+.vempty{font-size:11px;color:var(--text3);padding:9px 0 2px}
+.nextline{display:flex;align-items:baseline;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;min-width:0}
+.nextline span{color:var(--text3);flex:none}
+.nextline b{font-weight:550;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dsub{margin-top:5px;display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--text3);min-width:0}
+.dsub a{color:var(--brand);text-decoration:none;font-family:var(--mono);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dsub a:hover{text-decoration:underline}
+.dsub .bad{color:var(--red)}
+.vsub{font-size:10.5px;font-weight:600;color:var(--text3);margin:16px 0 6px;letter-spacing:.02em}
+ul.no{margin:0;padding-left:16px;color:var(--text3);font-size:11.5px;line-height:1.8}
+ul.no li{text-decoration:line-through;text-decoration-color:var(--line2)}
+
+/* 六件套 */
+.arts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 22px}
+.art{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;
+  padding:10px 4px;border-bottom:1px solid var(--line);text-align:left;
+  background:none;border-radius:0;transition:background .12s;
+}
+.art:hover{background:var(--panel2)}
+.arts .art:nth-last-child(-n+2){border-bottom:0}
+.art-name{font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art-fmts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.fmt{font-size:9.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.fmt.on{color:var(--green);background:var(--green-soft);border:1px solid var(--green-line);border-radius:4px;padding:1px 5px}
+.fmt.miss{color:var(--text3);font-weight:400;font-size:10px}
+
+/* 待办 / 点子 */
+.todo{display:flex;flex-direction:column;gap:6px;padding:9px 0;border-top:1px solid var(--line)}
+.todo:first-of-type{border-top:0;padding-top:0}
+.todo-top{display:flex;align-items:center;gap:6px;min-width:0}
+.todo-title{font-size:12px;font-weight:550;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.todo-bot{display:flex;align-items:center;gap:8px;min-width:0;padding-left:1px}
+.todo-bot .btn{margin-left:auto;flex:none}
+.doclink{
+  display:inline-flex;align-items:center;gap:3px;font-size:10.5px;color:var(--brand);
+  text-decoration:none;width:fit-content;
+}
+.doclink:hover{text-decoration:underline}
+.todo.blocked{background:var(--amber-soft);border-radius:8px;padding:9px 10px;margin:6px -10px 0;border-top-color:transparent}
+.todo.blocked+.todo{border-top-color:transparent}
+.idea{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:1px solid var(--line)}
+.idea:first-of-type{border-top:0;padding-top:0}
+.idea .num{font-family:var(--mono);font-size:10px;color:var(--text3);border:1px solid var(--line);border-radius:5px;padding:1px 4px;margin-top:1px;background:var(--panel2)}
+.idea-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.idea-title{font-size:12.5px;font-weight:550}
+.idea-desc{font-size:10.5px;color:var(--text3);line-height:1.4}
+.idea .chip{height:19px;font-size:10px;padding:0 6px;margin-top:1px}
+.idea-actions{display:flex;align-items:center;gap:8px;flex:none}
+.empty-note{padding:14px 2px;font-size:11.5px;color:var(--text3);display:flex;align-items:center;gap:6px}
+
+/* 右栏 */
+.side .card{padding:14px}
+.side-list{display:flex;flex-direction:column;gap:9px}
+.side-row{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;color:var(--text2);line-height:1.4;min-width:0}
+.side-row .hash{font-family:var(--mono);font-size:10px;color:var(--text3);flex:none;padding-top:1px}
+.side-row .msg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-row .t{flex:none;font-size:10px;color:var(--text3)}
+.side-row .chip{height:19px;font-size:10px;padding:0 6px;flex:none}
+.health{display:flex;flex-direction:column;gap:8px}
+.health-row{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text2)}
+.hdot{width:6px;height:6px;border-radius:50%;background:var(--line2);flex:none}
+.hdot.ok{background:var(--green)}
+.hdot.bad{background:var(--red)}
+.health-row .val{margin-left:auto;font-size:10.5px;color:var(--text3);font-family:var(--mono)}
+.data-foot{
+  margin-top:12px;padding-top:10px;border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text3);
+}
+.data-foot button{margin-left:auto;color:var(--brand);font-size:10.5px}
+.dyn{display:flex;flex-direction:column;gap:6px}
+.dyn-label{font-size:9.5px;font-weight:600;color:var(--text3);letter-spacing:.04em;margin-top:6px}
+.dyn-label:first-child{margin-top:0}
+.dyn .side-row{font-size:11px}
+.dyn .side-row .hash{font-size:9.5px}
+.dyn .muted{font-size:10.5px;color:var(--text3)}
+
+/* Banner */
+.banner{
+  display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:10px;
+  border:1px solid;font-size:11.5px;margin-bottom:16px;line-height:1.4;
+}
+.banner .b-msg{flex:1;min-width:0}
+.banner .b-act{flex:none}
+.banner.amber{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber)}
+.banner.red{background:var(--red-soft);border-color:var(--red-line);color:var(--red)}
+.banner.blue{background:var(--blue-soft);border-color:var(--blue-line);color:var(--blue)}
+.banner.gray{background:var(--panel3);border-color:var(--line2);color:var(--text2)}
+
+/* 空态 */
+.empty-wrap{display:flex;align-items:center;justify-content:center;min-height:70vh}
+.empty{max-width:420px;text-align:center;padding:24px}
+.empty h2{font-size:17px;margin:14px 0 6px}
+.empty p{font-size:12px;color:var(--text3);line-height:1.7;margin:0 0 16px}
+.empty-actions{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.empty-hint{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:8px;
+  background:var(--panel2);border:1px dashed var(--line2);font-size:10.5px;color:var(--text3);
+}
+.empty-ill{width:132px;height:96px;margin:0 auto;border:1px solid var(--line2);border-radius:12px;background:var(--panel);padding:14px}
+.empty-ill i{display:block;height:7px;border-radius:4px;background:var(--panel3);margin-bottom:7px}
+.empty-ill i:nth-child(1){width:42%;background:var(--brand-soft)}
+.empty-ill i:nth-child(2){width:88%}
+.empty-ill i:nth-child(3){width:70%}
+.empty-ill i:nth-child(4){width:52%;height:24px;margin-top:12px;background:var(--panel3)}
+
+/* ---------- 新建向导 ---------- */
+.modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(16,24,40,.46)}
+.modal.on{display:flex}
+.modal-card{
+  width:760px;max-width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);
+}
+.wiz-head{display:flex;align-items:flex-start;gap:12px;padding:18px 20px 12px}
+.wiz-kicker{font-size:9.5px;font-weight:700;letter-spacing:.08em;color:var(--brand);text-transform:uppercase}
+.wiz-head h2{font-size:17px;font-weight:700;margin:3px 0 0;letter-spacing:-.01em}
+.wiz-head .close{margin-left:auto;width:30px;height:30px;border-radius:8px;color:var(--text3);display:grid;place-items:center;font-size:18px;line-height:1}
+.wiz-head .close:hover{background:var(--panel2);color:var(--text)}
+.wiz-steps{display:flex;align-items:center;justify-content:flex-start;gap:8px;padding:0 20px 14px;border-bottom:1px solid var(--line)}
+.wstep{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text3);white-space:nowrap}
+.wstep i{width:17px;height:17px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;font-style:normal;font-size:9px;font-weight:700;background:var(--panel)}
+.wstep.on{color:var(--brand);font-weight:600}
+.wstep.on i{background:var(--brand);border-color:var(--brand);color:#fff}
+.wstep.done i{background:var(--green-soft);border-color:var(--green-line);color:var(--green)}
+.wline{flex:0 0 34px;height:1px;background:var(--line)}
+.wiz-body{flex:1;overflow:auto;padding:17px 20px 8px}
+.wiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:12px;min-width:0}
+.field label{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.field .req{color:var(--red);font-weight:700}
+.field input,.field textarea{
+  width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel2);
+  color:var(--text);padding:8px 10px;font:inherit;font-size:12px;outline:0;resize:vertical;
+}
+.field input:focus,.field textarea:focus{border-color:var(--brand);background:var(--panel);box-shadow:0 0 0 3px var(--brand-soft)}
+.field textarea{min-height:64px;line-height:1.55}
+.field .hint{font-size:10px;color:var(--text3);margin-top:4px;line-height:1.5}
+.typechips{display:flex;gap:5px;flex-wrap:wrap;padding-top:1px}
+.typechips button{height:28px;padding:0 9px;border:1px solid var(--line);border-radius:7px;font-size:11px;color:var(--text2);background:var(--panel)}
+.typechips button.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:600}
+.dirrow{display:flex;gap:6px}
+.dirrow input{flex:1;min-width:0}
+.wiz-note{display:flex;gap:8px;padding:9px 11px;border:1px dashed var(--line2);border-radius:8px;font-size:10.5px;color:var(--text3);line-height:1.55;margin-bottom:13px}
+.wiz-note svg{flex:none;margin-top:1px}
+.genbox{border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:12px 14px;margin-top:4px}
+.gen-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.genbox ul{margin:0;padding-left:16px;font-size:11px;color:var(--text2);line-height:1.8}
+.genbox .hint{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
+.wiz-foot{display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid var(--line);background:var(--panel2)}
+.wiz-foot .spacer{flex:1}
+
+/* ---------- 侧栏抽屉 ---------- */
+.drawer{
+  position:fixed;top:var(--mock-h);right:0;bottom:0;width:480px;z-index:60;
+  display:flex;flex-direction:column;background:var(--panel);border-left:1px solid var(--line);
+  box-shadow:var(--shadow-lg);transform:translateX(102%);transition:transform .22s ease;
+}
+.drawer.on{transform:none}
+.dhead2{flex:none;display:flex;align-items:flex-start;gap:10px;padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+.dhead2 .ico{width:30px;height:30px;border-radius:8px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.dhead2 h3{margin:0;font-size:13px;font-weight:650}
+.dhead2 .dpath{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:3px;word-break:break-all}
+.dhead2 .close{margin-left:auto;flex:none;width:28px;height:28px;border-radius:7px;color:var(--text3);display:grid;place-items:center}
+.dhead2 .close:hover{background:var(--panel2);color:var(--text)}
+.dtabs{flex:none;display:flex;gap:4px;padding:10px 16px 0;border-bottom:1px solid var(--line)}
+.dtab{height:30px;padding:0 10px;border-radius:7px 7px 0 0;font-size:11.5px;color:var(--text3);border-bottom:2px solid transparent}
+.dtab:hover{color:var(--text2)}
+.dtab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.dbody{flex:1;overflow:auto;padding:18px 20px 26px}
+.dfoot{flex:none;display:flex;align-items:center;gap:8px;padding:11px 16px;border-top:1px solid var(--line);background:var(--panel2)}
+.dfoot .spacer{flex:1}
+.dnote{font-size:10px;color:var(--text3);padding:0 20px 12px}
+
+/* 文档内容 */
+.doc{color:var(--text2);font-size:12.5px;line-height:1.75}
+.doc-kicker{font-size:10px;font-weight:600;letter-spacing:.05em;color:var(--brand);text-transform:uppercase;margin-bottom:6px}
+.doc h1{font-size:19px;line-height:1.3;margin:0 0 8px;color:var(--text);letter-spacing:-.01em}
+.doc .doc-lead{font-size:13px;color:var(--text2);margin:0 0 4px}
+.doc h2{font-size:12.5px;margin:20px 0 8px;padding-top:12px;border-top:1px solid var(--line);color:var(--text)}
+.doc p{margin:0 0 9px}
+.doc ul{margin:0 0 10px;padding-left:18px}
+.doc li{margin:3px 0}
+.doc blockquote{
+  margin:10px 0 14px;padding:10px 12px;border-left:3px solid var(--brand);
+  background:var(--brand-soft);border-radius:0 8px 8px 0;color:var(--text2);font-size:12px;
+}
+.doc table{width:100%;border-collapse:collapse;font-size:11.5px;margin:6px 0 12px}
+.doc th,.doc td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel2);color:var(--text3);font-weight:600}
+.doc a{color:var(--brand);text-decoration:none}
+.doc code{font-size:11px}
+.doc pre.code{margin:6px 0 12px;padding:9px 11px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;font-family:var(--mono);font-size:11px;color:var(--text2);overflow:auto}
+.doc .muted{color:var(--text3);font-size:11px}
+.swatches{display:flex;gap:7px;margin:4px 0 10px}
+.swatches span{width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,.08)}
+.wf{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0 10px}
+.wf-phone{width:178px;border:1px solid var(--line2);border-radius:16px;padding:9px;background:var(--panel2)}
+.wf-bar{height:13px;border-radius:7px;background:var(--line);margin-bottom:8px}
+.wf-block{border-radius:5px;background:color-mix(in srgb,var(--line) 72%,transparent);margin-bottom:7px}
+.md{
+  margin:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);
+  font-family:var(--mono);font-size:11px;line-height:1.65;color:var(--text2);white-space:pre-wrap;word-break:break-word;
+}
+.drawer-empty{text-align:center;padding:36px 20px;color:var(--text3)}
+.drawer-empty h4{margin:12px 0 6px;font-size:13px;color:var(--text2)}
+.drawer-empty p{font-size:11.5px;line-height:1.6;margin:0 auto 16px;max-width:300px}
+.toast{
+  position:fixed;left:50%;bottom:26px;z-index:100;transform:translate(-50%,14px);
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;
+  background:#101828;color:#fff;font-size:12px;padding:9px 14px;border-radius:9px;box-shadow:var(--shadow-lg);
+  max-width:70vw;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:1080px){
+  .search{width:200px}
+  .arts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .drawer{width:420px}
+}
+</style>
+</head>
+<body>
+
+<header class="mockbar">
+  <div class="mb-left">
+    <span class="mb-badge">MOCK</span>
+    <b>gd-product-kit · 工作台样板</b>
+    <span class="mb-note">静态示意，不是最终插件。点项目、六件套、待办链接试试。</span>
+  </div>
+  <div class="mb-right">
+    <span class="mb-label">预览状态</span>
+    <div class="seg" id="scenarios">
+      <button data-action="scenario" data-scenario="normal" class="on">正常</button>
+      <button data-action="scenario" data-scenario="new">新项目</button>
+      <button data-action="scenario" data-scenario="stale">数据过期</button>
+      <button data-action="scenario" data-scenario="dead">链接失效</button>
+      <button data-action="scenario" data-scenario="paused">已暂停</button>
+      <button data-action="scenario" data-scenario="empty">空工作台</button>
+    </div>
+    <button class="mb-theme" data-action="theme" id="themeBtn">深色</button>
+  </div>
+</header>
+
+<div class="app">
+  <nav class="rail">
+    <div class="logo">DS</div>
+    <button title="会话" aria-label="会话" data-action="toast" data-msg="DSH 会话（样板外）"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg></button>
+    <button class="on" title="搞定产品设计包" aria-label="搞定产品设计包"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+    <button title="插件" aria-label="插件" data-action="toast" data-msg="DSH 插件页（样板外）"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3a2 2 0 1 0 0 4v3H9v-3a2 2 0 1 0 0-4z"/></svg></button>
+    <div class="rail-spacer"></div>
+    <button title="设置" aria-label="设置" data-action="toast" data-msg="DSH 设置（样板外）"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/></svg></button>
+  </nav>
+
+  <main class="wb">
+    <header class="wb-head">
+      <div class="wb-title">
+        <div class="wb-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></div>
+        <div>
+          <div class="wb-t">搞定产品设计包</div>
+          <div class="wb-s">VibeCoding 项目工作台 · gd-product-kit</div>
+        </div>
+      </div>
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg>
+        <input id="q" placeholder="搜索项目…" autocomplete="off">
+      </div>
+      <div class="wb-actions">
+        <button class="btn ghost" data-action="toast" data-msg="真实插件：选择根目录 → 扫描识别项目 → 确认导入（示意）">导入项目</button>
+        <button class="btn primary" data-action="wiz-open">＋ 新建项目</button>
+      </div>
+    </header>
+
+    <div class="wb-body">
+      <aside class="plist" id="plist"></aside>
+      <section class="detail" id="detail"></section>
+    </div>
+  </main>
+</div>
+
+<aside class="drawer" id="drawer" aria-label="侧边栏预览"></aside>
+
+<div class="modal" id="wizard" aria-label="新建项目">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="wiz-title">
+    <div class="wiz-head">
+      <div>
+        <div class="wiz-kicker" id="wiz-kicker">新建项目 · 1/3</div>
+        <h2 id="wiz-title">先想清楚，再动手</h2>
+      </div>
+      <button class="close" type="button" aria-label="关闭" data-action="wiz-close">×</button>
+    </div>
+    <div class="wiz-steps" id="wiz-steps"></div>
+    <div class="wiz-body" id="wiz-body"></div>
+    <div class="wiz-foot">
+      <button class="btn ghost" type="button" data-action="wiz-close">取消</button>
+      <span class="spacer"></span>
+      <button class="btn" type="button" data-action="wiz-prev" id="wiz-prev">上一步</button>
+      <button class="btn primary" type="button" data-action="wiz-next" id="wiz-next">下一步</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+ * gd-product-kit 工作台 · 静态样板
+ * 目的：只验证信息层级与状态，不代表最终插件实现。
+ * ============================================================ */
+
+const ART_META = {
+  demand:   { title:'需求调研', desc:'来源 · 真实痛点 · 不做什么', file:'需求调研', icon:'search' },
+  backlog:  { title:'需求池', desc:'核心任务 · 完整过程 · P0/P1/P2', file:'需求池', icon:'list' },
+  prd:      { title:'PRD', desc:'一页纸 + 这一版不做', file:'PRD', icon:'doc' },
+  wireframe:{ title:'线框图', desc:'信息层级与页面结构', file:'产品线框图', icon:'layout' },
+  design:   { title:'设计规范', desc:'写给 AI 读的规则', file:'UI设计规范', icon:'palette' },
+  agents:   { title:'工作区规则', desc:'AGENTS.md：目录 · 命令 · 约束', file:'AGENTS', icon:'terminal' }
+};
+
+const PROJECTS = [
+  {
+    id:'pbsk', name:'铺板快算', kind:'微信小程序', path:'E:\\AI\\铺板快算',
+    version:{
+      label:'v1.2.0', state:'提审中', tone:'amber',
+      goal:'6 个新计算器上架，审核通过后发布',
+      next:'真机检查 → 补发布清单 → 提审',
+      track:[
+        {n:'代码', s:'done', d:'11-10'},
+        {n:'体验版', s:'done', d:'11-10'},
+        {n:'提审', s:'done', d:'11-10'},
+        {n:'审核', s:'active', d:'进行中'},
+        {n:'发布', s:'todo', d:''}
+      ],
+      notDoing:['首页分类 / 搜索（U7，项目太少）','跨计算器串联（实验卡）']
+    },
+    release:{ kind:'体验版二维码', url:'', probe:'none', note:'审核通过后发布' },
+    artifacts:{
+      demand:{md:1,html:1,d:'11-10'},
+      backlog:{md:1,html:0,d:'11-10'},
+      prd:{md:1,html:1,d:'11-10'},
+      wireframe:{md:1,html:1,d:'11-09'},
+      design:{md:1,html:1,d:'11-09'},
+      agents:{md:1,html:0,d:'10-27'}
+    },
+    todos:[
+      {title:'真机检查 1.2.0', state:'doing', doc:'publish', docName:'发布清单.md'},
+      {title:'补 UI 稿 v5 进 docs', state:'todo', doc:'design', docName:'UI设计规范.md'},
+      {title:'分享卡重画', state:'blocked', doc:'ideas', docName:'点子池.md'}
+    ],
+    ideas:[
+      {id:'R1', title:'细胞系库', desc:'按板型存常用铺板密度，铺板时直接选', p:'中', doc:'ideas'},
+      {id:'R6', title:'模板置顶', desc:'模板多了以后按使用频率排', p:'低', doc:'ideas'},
+      {id:'R4', title:'记录导出图片', desc:'导出图抬头带昵称 / 实验室名', p:'低', doc:'ideas'}
+    ],
+    ideaTotal:12,
+    commits:[
+      {h:'d6d037c', m:'feat: 1.2.0 六个计算器', t:'11-10'},
+      {h:'a2a51c0', m:'feat: 1.1.0 分享卡片', t:'10-26'},
+      {h:'5418e98', m:'chore: 未发版补齐', t:'10-26'}
+    ],
+    history:[
+      {v:'v1.1.0', s:'已发布', tone:'green', t:'11-10'},
+      {v:'v1.0.0', s:'已提审', tone:'gray', t:'10-26'}
+    ],
+    updated:'2 小时前', updater:'AI'
+  },
+  {
+    id:'catalk', name:'CATALK', kind:'iOS App', path:'E:\\AI\\CATALK',
+    version:{
+      label:'v0.1', state:'构思', tone:'gray',
+      goal:'先把「和猫说话」这件事的需求讲清楚',
+      next:'补需求调研 → 写 3 条事实',
+      track:[
+        {n:'代码', s:'todo', d:''},
+        {n:'内测', s:'todo', d:''},
+        {n:'提审', s:'todo', d:''},
+        {n:'上架', s:'todo', d:''}
+      ],
+      notDoing:['账号体系','社区']
+    },
+    release:{ kind:'', url:'', probe:'none', note:'还没有发布地址' },
+    artifacts:{
+      demand:{md:1,html:0,d:'3 天前'},
+      backlog:{md:0,html:0,d:''},
+      prd:{md:1,html:0,d:'3 天前'},
+      wireframe:{md:0,html:0,d:''},
+      design:{md:0,html:0,d:''},
+      agents:{md:1,html:0,d:'11-10'}
+    },
+    todos:[],
+    ideas:[
+      {id:'I1', title:'自定义音色', desc:'让每只猫有自己的声音', p:'中', doc:'ideas'},
+      {id:'I2', title:'离线模式', desc:'没网也能玩', p:'低', doc:'ideas'}
+    ],
+    ideaTotal:2,
+    commits:[
+      {h:'8f2a1c9', m:'docs: 需求调研 v0.1', t:'3 天前'}
+    ],
+    history:[],
+    updated:'3 天前', updater:'AI'
+  },
+  {
+    id:'gds', name:'搞定空间站', kind:'网站', path:'E:\\AI\\gdspace',
+    version:{
+      label:'v2.3.0', state:'已上线', tone:'green',
+      goal:'教程页移动端改版 + 站内搜索',
+      next:'教程搜索高亮',
+      track:[
+        {n:'代码', s:'done', d:'11-08'},
+        {n:'预览', s:'done', d:'11-08'},
+        {n:'上线', s:'done', d:'11-09'}
+      ],
+      notDoing:['评论区','用户登录']
+    },
+    release:{ kind:'网站', url:'https://gaodingpm.com', probe:'ok', note:'Vercel 自动部署' },
+    artifacts:{
+      demand:{md:1,html:1,d:'09-20'},
+      backlog:{md:1,html:1,d:'09-20'},
+      prd:{md:1,html:1,d:'10-12'},
+      wireframe:{md:1,html:1,d:'10-12'},
+      design:{md:1,html:1,d:'10-12'},
+      agents:{md:1,html:1,d:'09-20'}
+    },
+    todos:[
+      {title:'教程搜索高亮', state:'todo', doc:'ideas', docName:'点子池.md'}
+    ],
+    ideas:[
+      {id:'W1', title:'教程内目录', desc:'长文自动生成右侧目录', p:'中', doc:'ideas'}
+    ],
+    ideaTotal:5,
+    commits:[
+      {h:'a91c4e2', m:'feat: 移动端教程页', t:'11-09'},
+      {h:'7d3b901', m:'feat: 站内搜索', t:'11-08'},
+      {h:'2c8e77a', m:'chore: 依赖升级', t:'11-06'}
+    ],
+    history:[
+      {v:'v2.2.0', s:'已上线', tone:'green', t:'10-12'},
+      {v:'v2.1.0', s:'已上线', tone:'green', t:'09-20'}
+    ],
+    updated:'5 小时前', updater:'AI'
+  },
+  {
+    id:'plant', name:'plantlog', kind:'iOS App', path:'E:\\WORK\\plantlog',
+    version:{
+      label:'v0.8', state:'暂停', tone:'gray',
+      goal:'养花记录：拍照 + 浇水提醒',
+      next:'恢复前重新确认 MVP',
+      track:[
+        {n:'代码', s:'done', d:'10-22'},
+        {n:'内测', s:'todo', d:''},
+        {n:'提审', s:'todo', d:''},
+        {n:'上架', s:'todo', d:''}
+      ],
+      notDoing:['社区','植物识别']
+    },
+    release:{ kind:'', url:'', probe:'none', note:'暂停中，未发布' },
+    artifacts:{
+      demand:{md:1,html:0,d:'10-22'},
+      backlog:{md:0,html:0,d:''},
+      prd:{md:1,html:0,d:'10-22'},
+      wireframe:{md:0,html:0,d:''},
+      design:{md:0,html:0,d:''},
+      agents:{md:0,html:0,d:''}
+    },
+    todos:[
+      {title:'恢复开发前重新确认 MVP', state:'todo', doc:'ideas', docName:'需求池.md'}
+    ],
+    ideas:[
+      {id:'P1', title:'浇水提醒', desc:'按植物类型给默认周期', p:'高', doc:'ideas'},
+      {id:'P2', title:'照片时间线', desc:'同一盆花的生长对比', p:'中', doc:'ideas'}
+    ],
+    ideaTotal:4,
+    commits:[
+      {h:'e4c1a02', m:'feat: 记录页初版', t:'10-22'}
+    ],
+    history:[],
+    updated:'21 天前', updater:'AI'
+  },
+  {
+    id:'gdkanban', name:'gdkanban', kind:'DSH 插件', path:'E:\\WORK\\gdkanban',
+    archived:true,
+    version:{label:'v0.1.0', state:'已归档', tone:'gray', goal:'任务看板（旧项目）', next:'已归档', track:[], notDoing:[]},
+    release:{ kind:'', url:'', probe:'none', note:'已归档' },
+    artifacts:{},
+    todos:[], ideas:[], ideaTotal:0, commits:[], history:[],
+    updated:'2026-08', updater:'手动'
+  }
+];
+
+const ART_CONTENT = {
+  demand:{
+    md:`# 需求调研 · 铺板快算 v1.2.0
+
+> 2026-11-10 拍板：第一批 6 个新计算器，偏分子 / 蛋白方向。
+
+## 一、来源
+- 用户反馈：实验台场景，手机比电脑顺手
+- 调研：23 个候选按 P0 / P1 / P2 分级（新计算器调研-2026-11-10）
+- 拍板：先做 N1–N6 六个
+
+## 二、真实痛点
+一次实验要开 3 个网页 + 2 个 App 算体积、浓度、稀释；
+算完记不住，下次还得重来。
+
+## 三、不做什么
+- 首页分类 / 搜索（项目太少）
+- 跨计算器串联（实验卡）
+- 账号体系与云同步`,
+    html:`<div class="doc">
+      <div class="doc-kicker">需求调研 · 2026-11-10 · v1.2.0</div>
+      <h1>铺板快算：把「实验台计算」做快</h1>
+      <blockquote>「计算不难，但要快、要看得到过程。」—— 2026-10 用户访谈</blockquote>
+      <h2>一、来源</h2>
+      <ul>
+        <li>用户反馈：实验台场景，手机比电脑顺手</li>
+        <li>调研：23 个候选按 P0 / P1 / P2 分级</li>
+        <li>拍板：第一批 6 个，偏分子 / 蛋白方向（2026-11-10）</li>
+      </ul>
+      <h2>二、真实痛点</h2>
+      <p>一次实验要开 3 个网页 + 2 个 App 算体积、浓度、稀释；算完记不住，下次还得重来。</p>
+      <h2>三、不做什么</h2>
+      <ul class="no">
+        <li>首页分类 / 搜索（项目太少）</li>
+        <li>跨计算器串联（实验卡）</li>
+        <li>账号体系与云同步</li>
+      </ul>
+    </div>`
+  },
+  backlog:{
+    md:`# 需求池 · 铺板快算 v1.2.0
+
+## 产品与第一版范围
+- 项目名称：铺板快算
+- 为谁服务：细胞 / 分子实验室的实验人员
+- 依据的用户资料：docs/需求调研.md
+- 第一版的核心任务：在手机上 30 秒内完成一次常用计算，并留下可复用的记录
+- 完整使用过程：打开 → 选计算器 → 填输入 → 看结果 → 保存 → 下次找到 / 修改
+- 第一版范围与限制：6 个计算器；单机保存；跨设备同步不做
+
+## 优先级说明
+P0 第一版必需；P1 后续改善；P2 留待考虑。
+
+## 全部需求
+### R01 · 溶液稀释
+优先级：P0
+- 对应什么困难：实验台要开 3 个网页算稀释
+- 希望达到的结果：输入 C1 / V1 / C2 直接出 V2
+- 准备怎么解决：配置驱动计算器
+- 怎样检查完成：与 v1 同输入同输出
+- 为什么这样排序：核心任务第一步
+- 还需要确认什么：无
+
+### R02 · 结果表格
+优先级：P0
+- 对应什么困难：倍比稀释结果是一张表
+- 希望达到的结果：一屏看完整张表
+- 准备怎么解决：结果页表格视图
+- 怎样检查完成：窄屏可读，不横滑
+- 为什么这样排序：多个计算器共用
+- 还需要确认什么：列宽规则
+
+## 试用与验证计划
+找 1 位实验人员用一周，记录 3 次计算；看是否还会打开网页。
+
+## 尚未确认的假设
+结果表格是不是所有计算器都需要。`,
+    html:`<div class="doc">
+      <div class="doc-kicker">需求池 · 2026-11-10 · v1.2.0</div>
+      <h1>铺板快算 · 需求池</h1>
+      <h2>产品与第一版范围</h2>
+      <table>
+        <tr><th>项</th><th>内容</th></tr>
+        <tr><td>为谁服务</td><td>细胞 / 分子实验室的实验人员</td></tr>
+        <tr><td>核心任务</td><td>在手机上 30 秒内完成一次常用计算，并留下可复用的记录</td></tr>
+        <tr><td>完整过程</td><td>打开 → 选计算器 → 填输入 → 看结果 → 保存 → 下次找到 / 修改</td></tr>
+        <tr><td>范围与限制</td><td>6 个计算器；单机保存；跨设备同步不做</td></tr>
+      </table>
+      <h2>全部需求</h2>
+      <table>
+        <tr><th>编号</th><th>需求</th><th>优先级</th><th>怎样检查完成</th></tr>
+        <tr><td>R01</td><td>溶液稀释</td><td>P0</td><td>与 v1 同输入同输出</td></tr>
+        <tr><td>R02</td><td>结果表格</td><td>P0</td><td>窄屏可读，不横滑</td></tr>
+        <tr><td>R03</td><td>记录保存</td><td>P0</td><td>关掉再打开还在</td></tr>
+        <tr><td>R04</td><td>分享卡片</td><td>P1</td><td>带结果，点开可核对</td></tr>
+        <tr><td>R05</td><td>细胞系库</td><td>P2</td><td>待验证</td></tr>
+      </table>
+      <h2>试用与验证计划</h2>
+      <p>找 1 位实验人员用一周，记录 3 次计算；看是否还会打开网页。</p>
+      <h2>尚未确认的假设</h2>
+      <p>结果表格是不是所有计算器都需要。</p>
+    </div>`
+  },
+  prd:{
+    md:`# PRD · 铺板快算 1.2.0
+
+一句话：让实验人员在 30 秒内完成一次常用计算，并留下可复用的记录。
+
+## 功能
+- F3.9 溶液稀释 C1V1
+- F3.10 摩尔浓度 / 称量
+- F3.11 核酸浓度
+- F3.14 病毒感染 MOI
+
+## 这一版不做
+- IC50 改 log 插值（等算法确认）
+- 细胞系库 / 试剂库`,
+    html:`<div class="doc">
+      <div class="doc-kicker">PRD · 1.2.0 · 2026-11-10</div>
+      <h1>铺板快算 1.2.0</h1>
+      <p class="doc-lead">让实验人员在 30 秒内完成一次常用计算，并留下可复用的记录。</p>
+      <h2>功能范围</h2>
+      <table>
+        <tr><th>编号</th><th>功能</th><th>验收</th></tr>
+        <tr><td>F3.9</td><td>溶液稀释 C1V1</td><td>与 v1 同输入同输出</td></tr>
+        <tr><td>F3.10</td><td>摩尔浓度 / 称量</td><td>分子量 → 称量 mg</td></tr>
+        <tr><td>F3.11</td><td>核酸浓度</td><td>A260 ↔ ng/μL</td></tr>
+        <tr><td>F3.14</td><td>MOI</td><td>病毒体积按孔板换算</td></tr>
+      </table>
+      <h2>这一版不做</h2>
+      <ul class="no"><li>IC50 改 log 插值（等算法确认）</li><li>细胞系库 / 试剂库</li></ul>
+    </div>`
+  },
+  wireframe:{
+    md:`# 产品线框图 · 1.2.0
+
+左：首页「计算器 / 我的模板」分段
+右：结果页表格视图
+
+（HTML 版本可看结构；MD 是源文）`,
+    html:`<div class="doc">
+      <div class="doc-kicker">线框图 · 1.2.0</div>
+      <h1>首页与结果页</h1>
+      <div class="wf">
+        <div class="wf-phone">
+          <div class="wf-bar"></div>
+          <div class="wf-block" style="height:26px"></div>
+          <div class="wf-block" style="height:64px"></div>
+          <div class="wf-block" style="height:12px;width:60%"></div>
+          <div class="wf-block" style="height:26px"></div>
+          <div class="wf-block" style="height:26px"></div>
+        </div>
+        <div class="wf-phone">
+          <div class="wf-bar"></div>
+          <div class="wf-block" style="height:40px"></div>
+          <div class="wf-block" style="height:22px"></div>
+          <div class="wf-block" style="height:22px"></div>
+          <div class="wf-block" style="height:60px"></div>
+          <div class="wf-block" style="height:30px"></div>
+        </div>
+      </div>
+      <p class="muted">左：首页「计算器 / 我的模板」分段；右：结果页表格视图。</p>
+    </div>`
+  },
+  design:{
+    md:`# UI 设计规范 · v5
+
+## 颜色
+- 品牌绿 #1a7f37
+- 链接蓝 #0b6bcb
+- 警示橙 #b54708
+
+## 字号
+标题 20 / 1.3；正文 14 / 1.6；辅助 12 / 1.5
+
+## 间距
+4 的倍数；卡片内边距 16；页面左右 20。`,
+    html:`<div class="doc">
+      <div class="doc-kicker">设计规范 · v5</div>
+      <h1>给 AI 读的规则</h1>
+      <h2>颜色</h2>
+      <div class="swatches">
+        <span style="background:#1a7f37"></span>
+        <span style="background:#0b6bcb"></span>
+        <span style="background:#b54708"></span>
+        <span style="background:#101828"></span>
+        <span style="background:#f2f4f7"></span>
+      </div>
+      <h2>字号</h2>
+      <table><tr><th>用途</th><th>字号 / 行高</th></tr><tr><td>标题</td><td>20 / 1.3</td></tr><tr><td>正文</td><td>14 / 1.6</td></tr><tr><td>辅助</td><td>12 / 1.5</td></tr></table>
+      <h2>间距</h2>
+      <p>4 的倍数；卡片内边距 16；页面左右 20。</p>
+    </div>`
+  },
+  agents:{
+    md:`# AGENTS.md · 工作区规则
+
+## 目录
+v2/ 小程序
+docs/ 产品文档
+tools/ 测试
+
+## 命令
+node tools/test/run.js
+
+## 约束
+- 计算逻辑必须与 v1 同输入同输出
+- 改动同步 PRD 与公式手册`,
+    html:null
+  }
+};
+
+const DOCS = {
+  publish:{
+    title:'发布清单.md', path:'docs/发布清单.md',
+    md:`# 铺板快算 · 发布清单
+
+> 更新：2026-11-10　小程序：企业主体
+
+## 0. 现在的状态
+
+| 版本 | 代码 | 提审 | 审核 | 发布 |
+|---|---|---|---|---|
+| 1.2.0 | d6d037c | ✅ 11-10 | ⏳ 审核中 | — |
+| 1.1.0 | a2a51c0 | ✅ 10-26 | ✅ 已通过 | ✅ 11-10 |
+| 1.0.0 | 25ba968 | ✅ 10-26 | 待核实 | ❌ |
+
+## 4. 发布后检查
+- [ ] 真机打开，检查 6 个新计算器
+- [ ] 分享卡片带结果
+- [ ] 把发布时间补进版本记录`
+  },
+  ideas:{
+    title:'点子池.md', path:'docs/产品迭代/点子池.md',
+    md:`# 铺板快算 · 产品迭代点子池
+
+> 建立：2026-10-26　更新：2026-11-10　对应版本：1.1.0 之后
+> 这是唯一的待办 / 想法入口。只记点子和出处，不等于要做。
+
+## 一、给药体积
+| # | 点子 | 建议优先级 |
+|---|---|---|
+| G1 | 反推配药浓度 | 高 |
+| G2 | 体积系数可自定义 | 高 |
+
+## 四、数据与记录
+| # | 点子 | 建议优先级 |
+|---|---|---|
+| R1 | 细胞系库 | 中 |
+| R4 | 记录导出为图片 | 低 |
+| R6 | 模板管理：分组、置顶 | 低 |`
+  },
+  design:{
+    title:'UI设计规范.md', path:'docs/UI设计规范.md',
+    md:`# 铺板快算 · UI 设计规范
+
+> 给 AI 读的规则；改 UI 先改这里，再改页面。
+
+## 颜色
+- 主色 #1a7f37（成功 / 主按钮）
+- 链接 #0b6bcb
+- 警示 #b54708
+
+## 字号
+标题 20 / 1.3；正文 14 / 1.6；辅助 12 / 1.5
+
+## 组件
+- 卡片圆角 12，内边距 16
+- 按钮高度 40，主按钮满宽
+- 空状态必须有下一步动作`
+  }
+};
+
+const STATE_LABEL = {doing:'进行中', todo:'待做', blocked:'卡点'};
+const STATE_TONE  = {doing:'blue', todo:'gray', blocked:'amber'};
+
+const state = {
+  scenario:'normal',
+  selected:'pbsk',
+  filter:'all',
+  q:'',
+  drawer:null,
+  theme:'light'
+};
+
+/* ------------------------------ 数据视图 ------------------------------ */
+function projectById(id){ return PROJECTS.find(p=>p.id===id) || null; }
+
+function viewProject(p){
+  if(!p) return null;
+  const v = {
+    ...p,
+    version:{...p.version, track:(p.version.track||[]).map(s=>({...s})), notDoing:[...(p.version.notDoing||[])]},
+    release:p.release ? {...p.release} : null,
+    artifacts:{...p.artifacts}
+  };
+  if(state.scenario==='stale' && p.id==='catalk'){ v.updated='9 天前'; v.stale=true; }
+  if(state.scenario==='dead' && p.id==='gds'){ v.release = {...v.release, probe:'fail'}; v.dead=true; }
+  return v;
+}
+
+function counts(){
+  const live = PROJECTS.filter(p=>!p.archived);
+  return {
+    all: live.length,
+    active: live.filter(p=>!p.version.state.includes('暂停')).length,
+    paused: live.filter(p=>p.version.state.includes('暂停')).length,
+    archived: PROJECTS.filter(p=>p.archived).length
+  };
+}
+
+function visibleProjects(){
+  if(state.scenario==='empty') return [];
+  let list = PROJECTS.filter(p=>{
+    if(state.filter==='archived') return p.archived;
+    if(p.archived) return false;
+    if(state.filter==='paused') return p.version.state.includes('暂停');
+    if(state.filter==='active') return !p.version.state.includes('暂停');
+    return true;
+  });
+  const q = state.q.trim().toLowerCase();
+  if(q) list = list.filter(p=>p.name.toLowerCase().includes(q));
+  return list;
+}
+
+/* ------------------------------ 渲染：项目列表 ------------------------------ */
+function renderList(){
+  const host = document.getElementById('plist');
+  if(state.scenario==='empty'){
+    host.innerHTML = `
+      <div class="plist-head">
+        <div class="plist-title">项目 <span>0</span></div>
+        <div class="filters">
+          <button class="on">全部 <em>0</em></button>
+          <button>进行中 <em>0</em></button>
+          <button>暂停 <em>0</em></button>
+          <button>已归档 <em>0</em></button>
+        </div>
+      </div>
+      <div class="plist-empty">还没有项目<br><br>从「导入项目」开始，<br>先映射铺板快算。</div>
+      <div class="plist-foot">扫描：E:\\AI · E:\\WORK <button data-action="toast" data-msg="真实插件：重新扫描配置的根目录（示意）">重新扫描</button></div>
+    `;
+    return;
+  }
+  const c = counts();
+  const list = visibleProjects();
+  const chips = [
+    ['all','全部',c.all],
+    ['active','进行中',c.active],
+    ['paused','暂停',c.paused],
+    ['archived','已归档',c.archived]
+  ].map(([f,label,n])=>`<button class="${state.filter===f?'on':''}" data-action="filter" data-filter="${f}">${label} <em>${n}</em></button>`).join('');
+
+  host.innerHTML = `
+    <div class="plist-head">
+      <div class="plist-title">项目 <span>${c.all}</span></div>
+      <div class="filters">${chips}</div>
+    </div>
+    <div class="plist-scroll">
+      ${list.length ? list.map(projectRow).join('') : '<div class="plist-empty">没有匹配的项目</div>'}
+    </div>
+    <div class="plist-foot">扫描：E:\\AI · E:\\WORK <button data-action="toast" data-msg="真实插件：重新扫描配置的根目录（示意）">重新扫描</button></div>
+  `;
+}
+
+function projectRow(p){
+  const v = viewProject(p);
+  const job = v.version;
+  const todos = v.todos.filter(t=>t.state!=='done').length;
+  const blocked = v.todos.filter(t=>t.state==='blocked').length;
+  const steps = job.track || [];
+  const done = steps.filter(s=>s.s==='done').length;
+  const active = steps.filter(s=>s.s==='active').length;
+  const pct = steps.length ? Math.round(((done + active*0.5) / steps.length) * 100) : 0;
+  const bar = steps.length
+    ? `<div class="pbar ${job.state.includes('暂停')||p.archived?'paused':''}"><i style="width:${pct}%"></i></div>`
+    : '';
+  const dotTone = job.tone === 'amber' ? 'amber' : job.tone === 'blue' ? 'blue' : job.tone === 'green' ? 'green' : 'gray';
+  return `<button class="prow ${state.selected===p.id?'on':''} ${job.state.includes('暂停')?'paused':''}" data-action="select" data-id="${p.id}">
+    <div class="prow-top">
+      <span class="dot ${dotTone}"></span>
+      <span class="prow-name">${p.name}</span>
+      <span class="prow-ver">${job.label}</span>
+    </div>
+    <div class="prow-sub">
+      <span class="chip ${job.tone}">${job.state}</span>
+      <span>待办 ${todos}${blocked?` · 卡点 ${blocked}`:''}</span>
+      <span class="prow-time">${v.updated}</span>
+    </div>
+    ${bar}
+  </button>`;
+}
+
+/* ------------------------------ 渲染：详情 ------------------------------ */
+function renderDetail(){
+  const host = document.getElementById('detail');
+  if(state.scenario==='empty'){ host.innerHTML = emptyDetail(); return; }
+  const p = viewProject(projectById(state.selected));
+  if(!p){ host.innerHTML = emptyDetail(); return; }
+
+  host.innerHTML = `
+    <div class="detail-inner">
+      ${banner(p)}
+      <div class="dhead">
+        <div>
+          <h1>${p.name}<span class="kind"><span class="chip gray">${p.kind}</span></span></h1>
+          <div class="path">${p.path}</div>
+          <div class="dsub">${releaseLine(p)}</div>
+        </div>
+        <div class="dhead-right">
+          ${p.archived ? '' : `<button class="btn primary" data-action="toast" data-msg="真实插件：在该项目工作区打开新会话，并带上版本目标与下一步（示意）">${p.version.state.includes('暂停')?'恢复并继续':'▶ 继续做'}</button>`}
+          <button class="btn icon" aria-label="更多" data-action="toast" data-msg="更多操作：打开目录 / 编辑 project.json / 归档（示意）">···</button>
+        </div>
+      </div>
+      <div class="cols">
+        <div class="main">
+          ${versionCard(p)}
+          ${artifactsCard(p)}
+          ${ideasCard(p)}
+        </div>
+        <aside class="side">
+          ${todosCard(p)}
+          ${healthCard(p)}
+          ${dynamicsCard(p)}
+        </aside>
+      </div>
+    </div>
+  `;
+}
+
+function banner(p){
+  if(p.archived){
+    return bannerEl('gray','已归档，只读。取消归档后才能继续更新。','取消归档','toast','真实插件：取消归档（示意）');
+  }
+  if(p.version.state.includes('暂停')){
+    return bannerEl('gray','已暂停 21 天。恢复时从「下一步」继续，六件套不会丢。','恢复项目','toast','真实插件：恢复项目（示意）');
+  }
+  if(state.scenario==='stale' && p.id==='catalk'){
+    return bannerEl('amber','project.json 9 天没更新，下面的状态可能已经过期。','让 AI 回顾最近提交','toast','真实插件：派发「读 git log + 最近会话，更新 project.json」（示意）');
+  }
+  if(state.scenario==='dead' && p.id==='gds'){
+    return bannerEl('red','发布地址打不开：https://gaodingpm.com（1 小时前检测，超时）。','重新检测','toast','真实插件：重新探测发布地址（示意）');
+  }
+  if(state.scenario==='new' && p.id==='catalk'){
+    return bannerEl('blue','刚创建 3 天 · 六件套 3/6。先把需求补齐，再开第一个会话。','铺模板','toast','真实插件：把缺失的六件套模板铺进项目目录（示意）');
+  }
+  return '';
+}
+
+function bannerEl(tone, text, actLabel, action, toastMsg){
+  return `<div class="banner ${tone}">
+    ${icon('alert',15)}
+    <div class="b-msg">${text}</div>
+    <button class="btn sm b-act" data-action="${action}" data-msg="${toastMsg}">${actLabel}</button>
+  </div>`;
+}
+
+function versionCard(p){
+  const v = p.version;
+  const track = (v.track||[]).length
+    ? `<div class="track">${v.track.map(s=>`<div class="tstep ${s.s}"><span class="tdot"></span><b>${s.n}</b></div>`).join('')}</div>`
+    : `<div class="vempty">还没有发布轨道</div>`;
+  const next = v.next ? `<div class="nextline"><span>下一步</span><b>${v.next}</b></div>` : '';
+  return `<div class="card">
+    <div class="card-head"><h2>当前版本</h2></div>
+    <div class="vline">
+      <span class="ver">${v.label}</span>
+      <span class="chip ${v.tone}">${v.state}</span>
+    </div>
+    ${track}
+    ${next}
+  </div>`;
+}
+
+function artifactsCard(p){
+  const keys = Object.keys(ART_META);
+  const missing = keys.filter(k=>!p.artifacts[k]?.md || !p.artifacts[k]?.html).length;
+  const locked = p.archived || p.version.state.includes('暂停');
+  const rows = keys.map(k=>{
+    const m = ART_META[k];
+    const a = p.artifacts[k] || {};
+    return `<button class="art" data-action="open-artifact" data-key="${k}" data-id="${p.id}">
+      <span class="art-name">${m.title}</span>
+      <span class="art-fmts">
+        ${a.html ? '<span class="fmt on">HTML</span>' : '<span class="fmt miss">缺失 HTML</span>'}
+        ${a.md ? '<span class="fmt on">MD</span>' : '<span class="fmt miss">缺失 MD</span>'}
+      </span>
+    </button>`;
+  }).join('');
+  return `<div class="card">
+    <div class="card-head">
+      <h2>六件套</h2>
+      <span class="hint">HTML + MD · 点击在侧栏打开</span>
+      ${missing && !locked ? '<div class="act"><button class="btn sm" data-action="toast" data-msg="真实插件：按模板补齐缺失的 HTML / MD（示意）">一键补充</button></div>' : ''}
+    </div>
+    <div class="arts">${rows}</div>
+  </div>`;
+}
+
+function todosCard(p){
+  const locked = p.archived || p.version.state.includes('暂停');
+  const rows = p.todos.length
+    ? p.todos.map(t=>`<div class="todo ${t.state==='blocked'?'blocked':''}">
+        <div class="todo-top">
+          <span class="chip ${STATE_TONE[t.state]}">${STATE_LABEL[t.state]}</span>
+          <span class="todo-title">${t.title}</span>
+        </div>
+        <div class="todo-bot">
+          <button class="doclink" data-action="open-doc" data-doc="${t.doc}">${t.docName}</button>
+          <button class="btn sm" ${locked?'disabled':''} data-action="toast" data-msg="真实插件：在「${p.name}」工作区开新会话，prompt 带版本目标 + 这条待办 + 相关文件（示意）">派发</button>
+        </div>
+      </div>`).join('')
+    : `<div class="empty-note" style="padding:4px 0">${icon('check',13)} 没有待办。去点子池挑一个。</div>`;
+
+  return `<div class="card">
+    <div class="card-head">
+      <h2>待办与卡点</h2>
+      <span class="hint">${p.todos.length} 条</span>
+      <div class="act"><button class="btn sm" title="添加待办" ${locked?'disabled':''} data-action="toast" data-msg="真实插件：在 project.json 里新增一条待办（示意）">＋</button></div>
+    </div>
+    ${rows}
+  </div>`;
+}
+
+function ideasCard(p){
+  const locked = p.archived || p.version.state.includes('暂停');
+  const rows = p.ideas.length
+    ? p.ideas.map(i=>`<div class="idea">
+        <span class="num">${i.id}</span>
+        <div class="idea-main">
+          <span class="idea-title">${i.title}</span>
+          <span class="idea-desc">${i.desc}</span>
+          <button class="doclink" data-action="open-doc" data-doc="${i.doc}">${icon('link',11)}点子池.md</button>
+        </div>
+        <span class="chip ${i.p==='高'?'red':i.p==='中'?'amber':'gray'}">${i.p}</span>
+        <div class="idea-actions">
+          <button class="btn sm" ${locked?'disabled':''} data-action="toast" data-msg="真实插件：把 ${i.id} 升为待办，写回 project.json（示意）">升为待办</button>
+        </div>
+      </div>`).join('')
+    : `<div class="empty-note">${icon('link',13)} 还没有点子。点子池是文档，插件只读它。</div>`;
+
+  return `<div class="card">
+    <div class="card-head">
+      <h2>点子池</h2>
+      <span class="hint">${p.ideaTotal || 0} 条 · 来自 点子池.md</span>
+      <div class="act"><button class="btn sm" data-action="open-doc" data-doc="ideas">打开文档</button></div>
+    </div>
+    ${rows}
+  </div>`;
+}
+
+function releaseLine(p){
+  const r = p.release || {};
+  if(r.url){
+    const bad = r.probe==='fail';
+    return `<span>发布：</span><a href="${r.url}" target="_blank" rel="noreferrer">${r.url}</a>${bad?'<span class="bad">打不开</span>':''}`;
+  }
+  return `<span>发布：未发布</span>`;
+}
+
+function dynamicsCard(p){
+  const commits = p.commits.length
+    ? p.commits.slice(0,3).map(c=>`<div class="side-row"><span class="hash">${c.h}</span><span class="msg">${c.m}</span><span class="t">${c.t}</span></div>`).join('')
+    : `<div class="muted">暂无提交</div>`;
+  const hist = p.history.length
+    ? p.history.slice(0,2).map(h=>`<div class="side-row"><span class="ver" style="font-size:10px">${h.v}</span><span class="chip ${h.tone}">${h.s}</span><span class="t">${h.t}</span></div>`).join('')
+    : `<div class="muted">暂无版本</div>`;
+  return `<div class="card">
+    <div class="card-head"><h2>项目动态</h2><span class="hint">git · 版本</span></div>
+    <div class="dyn">
+      <div class="dyn-label">最近提交</div>${commits}
+      <div class="dyn-label">版本历史</div>${hist}
+    </div>
+  </div>`;
+}
+
+function healthCard(p){
+  const keys = Object.keys(ART_META);
+  const md = keys.filter(k=>p.artifacts[k]?.md).length;
+  const html = keys.filter(k=>p.artifacts[k]?.html).length;
+  const blocked = p.todos.filter(t=>t.state==='blocked').length;
+  const hasUrl = !!p.release?.url;
+  const linkOk = p.release?.probe !== 'fail';
+  const row = (state, label, val) => `<div class="health-row"><span class="hdot ${state}"></span><span>${label}</span><span class="val">${val}</span></div>`;
+  return `<div class="card">
+    <div class="card-head">
+      <h2>项目体检</h2>
+      <span class="hint">缺什么，点哪补</span>
+      <div class="act"><button class="btn sm" data-action="toast" data-msg="真实插件：重新体检六件套、发布地址、卡点（示意）">重新体检</button></div>
+    </div>
+    <div class="health">
+      ${row(md===6?'ok':'miss','六件套 MD',`${md}/6`)}
+      ${row(html===6?'ok':'miss','HTML 阅读版',`${html}/6`)}
+      ${row(hasUrl?(linkOk?'ok':'bad'):'miss','发布地址',hasUrl?(linkOk?'可访问':'打不开'):'未配置')}
+      ${row(blocked?'miss':'ok','卡点',String(blocked))}
+    </div>
+    <div class="data-foot">${icon('clock',11)} project.json · ${p.updated}由 ${p.updater} 更新</div>
+  </div>`;
+}
+
+function emptyDetail(){
+  return `<div class="detail-inner empty-wrap">
+    <div class="empty">
+      <div class="empty-ill"><i></i><i></i><i></i><i></i></div>
+      <h2>还没有项目</h2>
+      <p>扫描一个根目录，或从 DSH 工作区导入。每个项目会生成 <code>.gd/project.json</code> 和六件套。</p>
+      <div class="empty-actions">
+        <button class="btn primary" data-action="toast" data-msg="真实插件：选择目录 → 扫描识别 → 确认导入（示意）">扫描目录导入</button>
+        <button class="btn" data-action="wiz-open">新建项目</button>
+      </div>
+      <div class="empty-hint">建议先映射：铺板快算 · E:\\AI\\铺板快算</div>
+    </div>
+  </div>`;
+}
+
+/* ------------------------------ 渲染：抽屉 ------------------------------ */
+function renderDrawer(){
+  const host = document.getElementById('drawer');
+  const d = state.drawer;
+  if(!d){ host.classList.remove('on'); host.innerHTML=''; return; }
+  host.classList.add('on');
+
+  if(d.kind==='doc'){
+    const doc = DOCS[d.doc];
+    if(!doc) return;
+    host.innerHTML = `
+      ${drawerHead('doc', doc.title, doc.path)}
+      <div class="dbody"><pre class="md">${esc(doc.md)}</pre></div>
+      ${drawerFoot(doc.path)}
+    `;
+    return;
+  }
+
+  const p = projectById(d.id);
+  const meta = ART_META[d.key];
+  const a = p?.artifacts?.[d.key] || {};
+  const content = ART_CONTENT[d.key] || {md:'', html:null};
+  const tab = state.drawer.tab || (a.html ? 'html' : 'md');
+  const path = `docs/${meta.file}.${tab==='html'?'html':'md'}`;
+  let body = '';
+  const ro = !!p?.archived;
+  if(!a.md && !a.html){
+    body = `<div class="drawer-empty">
+      ${icon('plus',22)}
+      <h4>这份还没有生成</h4>
+      <p>真实插件会把模板路径、当前版本目标一起写进 prompt，派给会话生成 MD 和 HTML 两份。</p>
+      ${ro ? '<span class="chip gray">已归档 · 只读</span>' : `<button class="btn primary" data-action="toast" data-msg="真实插件：派发「按模板生成 ${meta.title}（MD + HTML）」（示意）">让 AI 生成${meta.title}</button>`}
+    </div>`;
+  }else if(tab==='html'){
+    body = a.html ? content.html : `<div class="drawer-empty">
+      ${icon('alert',22)}
+      <h4>还没有 HTML 阅读版</h4>
+      <p>MD 已经在了。真实插件会按 <code>templates/artifact.html</code> 补一份 HTML，内容以 MD 为准。</p>
+      ${ro ? '<span class="chip gray">已归档 · 只读</span>' : `<button class="btn primary" data-action="toast" data-msg="真实插件：派发「把 ${meta.file}.md 渲染成 HTML 阅读版」（示意）">生成 HTML</button>`}
+    </div>`;
+  }else{
+    body = `<pre class="md">${esc(content.md)}</pre>`;
+  }
+
+  host.innerHTML = `
+    ${drawerHead('artifact', meta.title, path)}
+    ${p.id!=='pbsk' ? '<div class="dnote">状态示意：文档内容只填了「铺板快算」的样例。</div>' : ''}
+    <div class="dtabs">
+      <button class="dtab ${tab==='html'?'on':''}" data-action="tab" data-tab="html">HTML 阅读版</button>
+      <button class="dtab ${tab==='md'?'on':''}" data-action="tab" data-tab="md">MD 源文</button>
+    </div>
+    <div class="dbody">${body}</div>
+    <div class="dnote">真实插件里，点卡片会调用 DSH 右侧栏打开这两份文件；这里用抽屉模拟。</div>
+    ${drawerFoot(path)}
+  `;
+}
+
+function drawerHead(kind, title, path){
+  return `<div class="dhead2">
+    <span class="ico">${icon(kind==='artifact'?'doc':'link',15)}</span>
+    <div>
+      <h3>${title}</h3>
+      <div class="dpath">${path}</div>
+    </div>
+    <button class="close" aria-label="关闭" data-action="close-drawer">${icon('x',15)}</button>
+  </div>`;
+}
+
+function drawerFoot(path){
+  return `<div class="dnote">侧边栏预览 · 只读示意</div>
+  <div class="dfoot">
+    <button class="btn primary" data-action="toast" data-msg="真实插件：调用 sidebarRight.openResource 在侧栏打开 ${path}（示意）">在侧边栏打开</button>
+    <button class="btn ghost" data-action="toast" data-msg="真实插件：复制 ${path}（示意）">复制路径</button>
+    <span class="spacer"></span>
+    <span class="chip gray">${path.endsWith('.html')?'HTML':'MD'}</span>
+  </div>`;
+}
+
+/* ------------------------------ 交互 ------------------------------ */
+function setScenario(name){
+  state.scenario = name;
+  state.filter = 'all';
+  state.q = '';
+  state.drawer = null;
+  document.getElementById('q').value = '';
+  if(name==='empty') state.selected = null;
+  else if(name==='new' || name==='stale') state.selected='catalk';
+  else if(name==='dead') state.selected='gds';
+  else if(name==='paused') state.selected='plant';
+  else state.selected='pbsk';
+  renderAll();
+}
+
+function updateScenarioButtons(){
+  document.querySelectorAll('#scenarios button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.scenario===state.scenario);
+  });
+}
+
+function updateThemeButton(){
+  document.getElementById('themeBtn').textContent = state.theme==='light' ? '深色' : '浅色';
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove('on'), 2200);
+}
+
+function openArtifact(id, key){
+  state.drawer = {kind:'artifact', id, key, tab: (projectById(id)?.artifacts?.[key]?.html ? 'html' : 'md')};
+  renderDrawer();
+}
+
+function openDoc(doc){ state.drawer = {kind:'doc', doc}; renderDrawer(); }
+
+/* ------------------------------ 新建向导 ------------------------------ */
+const wizard = {
+  open:false, step:1,
+  data:{
+    name:'', kind:'小程序', dir:'',
+    user:'', background:'', problem:'', workaround:'', goal:'',
+    coreTask:'', notDoing:''
+  }
+};
+const WIZ_TITLES = ['先想清楚，再动手','他是谁，卡在哪','第一版只承诺一件事'];
+const WIZ_STEPS = ['项目','用户','第一版'];
+
+function openWizard(step=1){
+  wizard.open = true;
+  wizard.step = Math.min(3, Math.max(1, step));
+  renderWizard();
+}
+function closeWizard(){
+  wizard.open = false;
+  document.getElementById('wizard').classList.remove('on');
+}
+function saveWizardFields(){
+  document.querySelectorAll('#wizard [data-wiz]').forEach(el=>{ wizard.data[el.dataset.wiz] = el.value; });
+}
+function wizNote(text){
+  return `<div class="wiz-note">${icon('alert',13)}<div>${text}</div></div>`;
+}
+function wizardStep1(){
+  const d = wizard.data;
+  const kinds = ['小程序','网站','App','插件','其他'];
+  return `${wizNote('先把「给谁、解决什么」写清楚，再让 AI 写代码。这个向导只做课程 03 的前半段：用户画像 + 项目边界。')}
+  <div class="wiz-grid">
+    <div class="field"><label>项目名 <b class="req">*</b></label><input data-wiz="name" value="${escAttr(d.name)}" placeholder="例：plantlog"></div>
+    <div class="field"><label>类型</label><div class="typechips">${kinds.map(k=>`<button class="${d.kind===k?'on':''}" data-action="wiz-kind" data-kind="${k}">${k}</button>`).join('')}</div></div>
+  </div>
+  <div class="field"><label>项目目录 <b class="req">*</b></label>
+    <div class="dirrow"><input data-wiz="dir" value="${escAttr(d.dir)}" placeholder="E:\\WORK\\projects\\my-product">
+      <button class="btn" data-action="toast" data-msg="真实插件：系统目录选择器（示意）">选择</button></div>
+    <div class="hint">会在这里生成 .gd/project.json、docs/ 和 AGENTS.md；已有文件不覆盖。</div>
+  </div>`;
+}
+function wizardStep2(){
+  const d = wizard.data;
+  return `${wizNote('先找问题，别急着想功能。写一个具体的人、一次具体的麻烦；不要写「拍照上传、时间线」这种解法。')}
+  <div class="field"><label>给谁用 <b class="req">*</b></label><input data-wiz="user" value="${escAttr(d.user)}" placeholder="例：29 岁、做电商运营、合租、养三盆花的小林"><div class="hint">一个具体的人，或一类边界清楚的人；不要写「所有人」。</div></div>
+  <div class="field"><label>这个人的背景（可选）</label><textarea data-wiz="background" placeholder="平时几点上下班、什么时候有空、在什么环境里做这件事">${esc(d.background)}</textarea></div>
+  <div class="field"><label>最麻烦的一件事 <b class="req">*</b></label><textarea data-wiz="problem" placeholder="具体到：什么时候、在哪、发生了什么、卡在哪">${esc(d.problem)}</textarea></div>
+  <div class="field"><label>现在怎么应付（可选）</label><textarea data-wiz="workaround" placeholder="备忘录、相册、Excel、问同事……现在的办法是什么">${esc(d.workaround)}</textarea></div>
+  <div class="field"><label>他想要的结果（可选）</label><textarea data-wiz="goal" placeholder="用他自己的话说，不写功能名">${esc(d.goal)}</textarea></div>`;
+}
+function wizardStep3(){
+  const d = wizard.data;
+  return `${wizNote('第一版只承诺一件事。先让这个人把一件事从头做完，再谈功能。')}
+  <div class="field"><label>第一版核心任务 <b class="req">*</b></label><textarea data-wiz="coreTask" placeholder="例：记下这一次照料，下次想不起来的时候能找到它">${esc(d.coreTask)}</textarea></div>
+  <div class="field"><label>这一版不做什么（可选）</label><textarea data-wiz="notDoing" style="min-height:80px" placeholder="一行一条；例：不做社区、不做植物识别">${esc(d.notDoing)}</textarea></div>
+  <div class="genbox">
+    <div class="gen-title">创建后会生成</div>
+    <ul>
+      <li>docs/需求调研.md（已按你填的内容写好）</li>
+      <li>docs/需求池.md（空模板）</li>
+      <li>docs/PRD.md、docs/线框图.html、docs/设计规范.md（空模板）</li>
+      <li>AGENTS.md、.gd/project.json</li>
+    </ul>
+    <div class="hint">然后自动开新会话：读需求调研，生成需求池。PRD / 线框图 / 设计规范先不写。</div>
+  </div>`;
+}
+function renderWizard(){
+  const host = document.getElementById('wizard');
+  if(!wizard.open){ host.classList.remove('on'); return; }
+  host.classList.add('on');
+  document.getElementById('wiz-kicker').textContent = `新建项目 · ${wizard.step}/3`;
+  document.getElementById('wiz-title').textContent = WIZ_TITLES[wizard.step-1];
+  document.getElementById('wiz-steps').innerHTML = WIZ_STEPS.map((label,i)=>{
+    const n = i + 1;
+    const cls = n===wizard.step ? 'on' : n<wizard.step ? 'done' : '';
+    return `<div class="wstep ${cls}"><i>${n<wizard.step?'✓':n}</i>${label}</div>${n<3?'<div class="wline"></div>':''}`;
+  }).join('');
+  document.getElementById('wiz-body').innerHTML = [wizardStep1, wizardStep2, wizardStep3][wizard.step-1]();
+  document.getElementById('wiz-prev').disabled = wizard.step===1;
+  document.getElementById('wiz-next').textContent = wizard.step===3 ? '创建并开始' : '下一步';
+}
+function wizValidate(){
+  const d = wizard.data;
+  if(wizard.step===1){
+    if(!d.name.trim()) return '先填项目名';
+    if(!d.dir.trim()) return '先选项目目录';
+  }
+  if(wizard.step===2){
+    if(!d.user.trim()) return '先写「给谁用」';
+    if(!d.problem.trim()) return '先写「最麻烦的一件事」';
+  }
+  if(wizard.step===3 && !d.coreTask.trim()) return '先写「第一版核心任务」';
+  return '';
+}
+function createWizardProject(){
+  saveWizardFields();
+  const d = wizard.data;
+  closeWizard();
+  toast(`已创建「${d.name.trim()}」：需求调研已填，正在派发「生成需求池」（示意）`);
+}
+
+function renderAll(){ renderList(); renderDetail(); renderDrawer(); updateScenarioButtons(); }
+
+document.addEventListener('click', (e)=>{
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const a = el.dataset;
+  switch(a.action){
+    case 'scenario': setScenario(a.scenario); break;
+    case 'theme':
+      state.theme = state.theme==='light' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = state.theme;
+      updateThemeButton();
+      break;
+    case 'select': {
+      const proj = projectById(a.id);
+      state.selected = a.id;
+      if(proj && proj.archived) state.filter = 'archived';
+      else if(state.filter==='archived') state.filter = 'all';
+      state.scenario = (a.id==='catalk' && state.scenario==='stale') ? 'stale' : (a.id==='gds' && state.scenario==='dead') ? 'dead' : 'normal';
+      state.drawer = null;
+      renderAll();
+      break;
+    }
+    case 'filter':
+      state.filter = a.filter;
+      renderList();
+      break;
+    case 'open-artifact': openArtifact(a.id, a.key); break;
+    case 'open-doc': openDoc(a.doc); break;
+    case 'tab':
+      if(state.drawer){ state.drawer.tab = a.tab; renderDrawer(); }
+      break;
+    case 'close-drawer':
+      state.drawer = null; renderDrawer(); break;
+    case 'wiz-open': openWizard(1); break;
+    case 'wiz-close': closeWizard(); break;
+    case 'wiz-kind':
+      saveWizardFields();
+      wizard.data.kind = a.kind;
+      renderWizard();
+      break;
+    case 'wiz-prev':
+      saveWizardFields();
+      if(wizard.step > 1){ wizard.step--; renderWizard(); }
+      break;
+    case 'wiz-next': {
+      saveWizardFields();
+      const err = wizValidate();
+      if(err){ toast(err); break; }
+      if(wizard.step < 3){ wizard.step++; renderWizard(); }
+      else createWizardProject();
+      break;
+    }
+    case 'toast': toast(a.msg || ''); break;
+  }
+});
+
+document.getElementById('q').addEventListener('input', (e)=>{
+  state.q = e.target.value;
+  renderList();
+});
+
+document.addEventListener('input', (e)=>{
+  const el = e.target.closest('[data-wiz]');
+  if(el) wizard.data[el.dataset.wiz] = el.value;
+});
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key!=='Escape') return;
+  if(wizard.open){ closeWizard(); return; }
+  if(state.drawer){ state.drawer=null; renderDrawer(); }
+});
+
+/* 工具 */
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function icon(name, size=16){
+  const p = {
+    search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/>',
+    list:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
+    doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+    layout:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/>',
+    palette:'<path d="M12 3a9 9 0 1 0 0 18h1.5a2 2 0 0 0 0-4H12a2 2 0 0 1 0-4h3a5 5 0 0 0 0-10z"/><circle cx="7.5" cy="10" r="1"/><circle cx="10" cy="6.5" r="1"/>',
+    terminal:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12.5 15H17"/>',
+    check:'<path d="M5 12l5 5 9-10"/>',
+    alert:'<path d="M12 4l9 16H3z"/><path d="M12 9v4M12 16.5v.5"/>',
+    x:'<path d="M6 6l12 12M18 6L6 18"/>',
+    link:'<path d="M10 14a4 4 0 0 0 5.7 0l2.3-2.3a4 4 0 0 0-5.7-5.7L11 7.3"/><path d="M14 10a4 4 0 0 0-5.7 0L6 12.3a4 4 0 0 0 5.7 5.7l1.3-1.3"/>',
+    tag:'<path d="M3 3h8l9 9-8 8-9-9z"/><circle cx="8" cy="8" r="1.2"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/>'
+  }[name] || '';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+}
+
+/* 启动 */
+document.documentElement.dataset.theme = state.theme;
+renderAll();
+
+/* 深链：?scenario=dead&open=demand&doc=publish&theme=dark */
+(function(){
+  const q = new URLSearchParams(location.search);
+  if(q.get('theme')==='dark'){
+    state.theme='dark'; document.documentElement.dataset.theme='dark'; updateThemeButton();
+  }
+  if(q.get('scenario')) setScenario(q.get('scenario'));
+  if(q.get('project') && projectById(q.get('project'))){
+    const pp = projectById(q.get('project'));
+    state.selected = pp.id;
+    state.scenario = 'normal';
+    state.filter = pp.archived ? 'archived' : 'all';
+    renderAll();
+  }
+  const w = Number(q.get('wizard'));
+  if(w >= 1 && w <= 3){
+    if(q.get('demo')==='1'){
+      Object.assign(wizard.data, {
+        name:'expense-log', kind:'App', dir:'E:\\WORK\\projects\\expense-log',
+        user:'30 岁、一个月出差 2–3 次、习惯先攒票据的销售',
+        background:'出差回来一堆纸质票和微信支付记录，月底才集中报；路上不方便开电脑',
+        problem:'月底整理票据时，想不起某笔打车是见哪个客户；发票和聊天记录对不上',
+        workaround:'相册 + 微信收藏 + Excel',
+        goal:'当场拍一张、记一句，月底能按客户和日期找回来',
+        coreTask:'记下这一笔支出和对应客户，月底能一次导出',
+        notDoing:'不做审批流\n不做发票验真\n不做多设备同步'
+      });
+    }
+    openWizard(w);
+  }
+  if(q.get('open')) openArtifact(state.selected || 'pbsk', q.get('open'));
+  if(q.get('tab') && state.drawer){ state.drawer.tab=q.get('tab'); renderDrawer(); }
+  if(q.get('doc')) openDoc(q.get('doc'));
+})();
+</script>
+</body>
+</html>
